@@ -42,6 +42,7 @@ noApproved  <- 50; noDenied <- 50; noUndecided <- 50
 loanDf <- loanData(noApproved, noDenied, noUndecided, c(4, 150), c(10,100), c(7,210) ,
                    c(1,20), c(2,30), c(.5,3), -0.1, 0.6, 0.1, 1221)
 
+
 loanDf <- cbind(loanDf,
                 target1 = c(rep(0, noApproved), rep(1, noDenied),rep(0,noUndecided)), 
                 target2 = c(rep(1, noApproved), rep(0, noDenied),rep(0,noUndecided)),
@@ -89,13 +90,15 @@ boundaryDf3 <- data.frame(PIratio=x, solvency=line2,
 boundaryDf4 <- data.frame(PIratio=x, solvency=line3,
                           deny=rep("Boundary3", length(x)))
 
+
+
 plot <- ggplot(data = loanDf, 
                aes(x = solvency, y = PIratio, colour=deny, fill=deny)) 
 plot <- plot + geom_point()
 plot <- plot + xlab("solvency") + ylab("PIratio")
 plot <- plot + theme_bw() + geom_line(data=boundaryDf2) 
 plot <- plot + geom_line(data=boundaryDf3) + geom_line(data=boundaryDf4)
-plot <- plot + theme(text=element_text(family="Arial")) 
+plot <- plot + theme(text=element_text(family="Arial"))
 plot <- plot + scale_x_continuous(limits=c(0,250))
 pdf("discFunction3C.pdf", family = "Arial", width = 5.5, height = 5)
 print(plot)
