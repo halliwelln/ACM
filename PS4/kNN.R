@@ -62,8 +62,6 @@ save_csv <- function(features,labels,predictLabels, prob ){
 kNN <- function(features, labels, test, k, p){
   if (!require("flexclust")) install.packages("flexclust"); library(flexclust)
   assert  <- assert(features, test, labels, k, p)
-  features <- scale(features)
-  test <- scale(test)
   dist <- get_dist_matrix(features, test, p)
   order_dist <- t(as.matrix(apply(dist,2,order)))
   neighbors <- get_neighbors(order_dist, k=k)
