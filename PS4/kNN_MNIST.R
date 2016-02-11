@@ -70,7 +70,7 @@ kNN <- function(features, labels, test, k, p){
   label_matrix <- get_label_matrix(neighbors, labels)
   predictLabels <- get_majority_vote(label_matrix)
   prob <- get_prob(label_matrix, predictLabels,k)
-  return(list(predLabels=predictLabels, prob=prob))
+  return(predLabels=predictLabels)
 }
 
 train_data <- read.csv("MNIST_training.csv", header=FALSE)
@@ -78,10 +78,29 @@ labels <- train_data$V1
 features <- train_data[,2:257]
 test <- read.csv("MNIST_test.csv", header=FALSE)
 
-k <- 3
-p <- 2
+k <- rep(seq(1,71,4))
+lk <- length(k)
 
-results <- kNN(features, labels, test, k,p)
+# 4 fold Cross-Validation
+n <- nrow(train)
+fold <- sample(1:4, n, replace=TRUE)
+
+acc <- rep (NA, lk)
+cvpred <- matrix(NA,nrow=n ,ncol=ncol(train))
+
+for (h in 1:lk){
+  ac <- rep(NA,4)
+  for (i in 1:4){
+    l <- kNN(features = features[fold!=i, ],labels = labels[fold!=i], 
+             test = features[fold==i, ],  k = k[h] , p=2)
+    ac[i] <- (1/length(l)) * sum(labels[fold==i] == l)*100
+  }
+  acc[h] <- mean(ac)
+}
+
+k_max <- k[which.max(acc)]
+
+results <- kNN(features, labels, test, k_max,p)
 df <- data.frame(predLabels=results$predLabels)
 
 write.csv(df,file="MNIST_predictions.csv")
