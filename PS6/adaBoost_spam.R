@@ -31,11 +31,6 @@ for (i in seq(1,100, 10)){
   
 }
 
-
-
-
-
-
 error <- data.frame(My_Training=my_train_error, My_Test=my_test_error)
 
 plot <-ggplot(data=error, aes(x=seq(1,100, 10), 
